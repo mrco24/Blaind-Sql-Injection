@@ -12,58 +12,63 @@ import (
 
 
 func main() {
-	// Define command-line flags and parse them.
-	urlFile := flag.String("u", "url.txt", "File containing a list of URLs")
-	payloadFile := flag.String("p", "payload.txt", "File containing a list of payloads")
-	verbose := flag.Bool("v", false, "Enable verbose output")
-	outputFile := flag.String("o", "output.txt", "Output file to write results")
-	flag.Parse()
+    // Define command-line flags and parse them.
+    urlFile := flag.String("u", "url.txt", "File containing a list of URLs")
+    payloadFile := flag.String("p", "payload.txt", "File containing a list of payloads")
+    verbose := flag.Bool("v", false, "Enable verbose output")
+    outputFile := flag.String("o", "output.txt", "Output file to write results")
+    flag.Parse()
 
-	urls, err := readLines(*urlFile)
-	if err != nil {
-		fmt.Printf("Error reading URL file: %s\n", err)
-		return
-	}
+    urls, err := readLines(*urlFile)
+    if err != nil {
+        fmt.Printf("Error reading URL file: %s\n", err)
+        return
+    }
 
-	payloads, err := readLines(*payloadFile)
-	if err != nil {
-		fmt.Printf("Error reading payload file: %s\n", err)
-		return
-	}
+    payloads, err := readLines(*payloadFile)
+    if err != nil {
+        fmt.Printf("Error reading payload file: %s\n", err)
+        return
+    }
 
-	output, err := os.Create(*outputFile)
-	if err != nil {
-		fmt.Printf("Error creating output file: %s\n", err)
-		return
-	}
-	defer output.Close()
+    output, err := os.Create(*outputFile)
+    if err != nil {
+        fmt.Printf("Error creating output file: %s\n", err)
+        return
+    }
+    defer output.Close()
 
-for _, url := range urls {
-    for _, payload := range payloads {
-        modifiedURL := url + payload
-        originalLength, err := getContentLength(url)
-        if err != nil {
-            fmt.Printf("Error fetching content length for %s: %s\n", url, err)
-            continue
-        }
-        modifiedLength, err := getContentLength(modifiedURL)
-        if err != nil {
-            fmt.Printf("Error fetching content length for %s: %s\n", modifiedURL, err)
-            continue
-        }
-        if originalLength != modifiedLength {
-            result := fmt.Sprintf("Not Vulnerable: %s (Content Length Unchanged)\n", modifiedURL) // Mark as "Not Vulnerable"
-            if *verbose {
-                fmt.Println(result)
+    // Define ANSI escape codes for red color
+    redColor := "\033[91m"
+    resetColor := "\033[0m"
+
+    for _, url := range urls {
+        for _, payload := range payloads {
+            modifiedURL := url + payload
+            originalLength, err := getContentLength(url)
+            if err != nil {
+                fmt.Printf("Error fetching content length for %s: %s\n", url, err)
+                continue
             }
-            output.WriteString(result)
-        } else {
-            result := fmt.Sprintf("Vulnerable: %s (Content Length Changed)\n", modifiedURL) // Mark as "Vulnerable"
-            fmt.Println(result)
-            output.WriteString(result)
+            modifiedLength, err := getContentLength(modifiedURL)
+            if err != nil {
+                fmt.Printf("Error fetching content length for %s: %s\n", modifiedURL, err)
+                continue
+            }
+            if originalLength != modifiedLength {
+                result := fmt.Sprintf("Not Vulnerable: %s (Content Length Unchanged)\n", modifiedURL) // Mark as "Not Vulnerable"
+                if *verbose {
+                    fmt.Println(result)
+                }
+                output.WriteString(result)
+            } else {
+                result := fmt.Sprintf("%sVulnerable: %s (Content Length Changed)%s\n", redColor, modifiedURL, resetColor) // Mark as "Vulnerable" in red
+                fmt.Println(result)
+                output.WriteString(result)
+            }
         }
     }
-}
+
 
 }
 
