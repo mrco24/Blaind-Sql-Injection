@@ -18,8 +18,13 @@
 ```
 old go version
 go get -u github.com/mrco24/mrco24-blaind_sql
+
 update version
 go install github.com/mrco24/mrco24-blaind_sql@latest
+
+path setup
+
+cp -r /root/go/bin/mrco24-blaind_sql /usr/local/bin
 ```
 # Usage:
 ```
