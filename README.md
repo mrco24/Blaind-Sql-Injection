@@ -17,15 +17,13 @@
 # Installation:
 ```
 # old go version
-```
 go get -u github.com/mrco24/mrco24-blaind_sql
-
-#update go version
+```
+# update go version
 go install github.com/mrco24/mrco24-blaind_sql@latest
 ```
 # Usage:
 ```
 mrco24-error-sql url.txt -p payload.txt -o output.txt -v
-```
-# Current Features:
-- This script will collec
+
+
