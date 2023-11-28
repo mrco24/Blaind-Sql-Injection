@@ -16,7 +16,12 @@
 
 # Installation:
 ```
+# old go version
+```
 go get -u github.com/mrco24/mrco24-blaind_sql
+
+#update go version
+go install github.com/mrco24/mrco24-blaind_sql@latest
 ```
 # Usage:
 ```
