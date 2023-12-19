@@ -28,6 +28,6 @@ cp -r /root/go/bin/mrco24-blaind_sql /usr/local/bin
 ```
 # Usage:
 ```
-mrco24-error-sql url.txt -p payload.txt -o output.txt -v
+mrco24-blaind_sql -f url.txt -o output.txt
 ```
 
